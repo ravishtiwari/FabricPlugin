@@ -38,6 +38,8 @@
 - (void)setFloatValueForKey:(CDVInvokedUrlCommand*)command;
 - (void)recordError:(CDVInvokedUrlCommand*)command;
 - (void)sendNonFatalCrash:(CDVInvokedUrlCommand*)command;
+- (void)recordNonFatalError:(CDVInvokedUrlCommand*)command;
+- (void)logException:(CDVInvokedUrlCommand*)command;
 
 @end
 
@@ -310,6 +312,31 @@
 - (void)sendNonFatalCrash:(CDVInvokedUrlCommand*)command
 {
     [self recordError: command];
+}
+
+// CA-Log Exception Method
+- (void)recordNonFatalError:(CDVInvokedUrlCommand*)command
+{
+    NSString *desc = [command argumentAtIndex:0 withDefault:@"No Message Provided"];
+    NSString *hyphen = @" - ";
+    NSString *stackTrace = [command argumentAtIndex:1 withDefault:@"Stacktrace not available"];
+    NSString *description = [NSString stringWithFormat:@"%@%@%@", desc, hyphen, stackTrace];
+    
+    NSDictionary *userInfo = @{ NSLocalizedDescriptionKey: description };
+    
+    NSNumber *defaultCode = [NSNumber numberWithInt:-1001];
+    int code = [defaultCode intValue];
+    
+    NSString *domain = [[NSBundle mainBundle] bundleIdentifier];
+    
+    NSError *error = [NSError errorWithDomain: domain code: code userInfo: userInfo];
+    //printf([NSString error]);
+    [[Crashlytics sharedInstance] recordError:error];
+}
+
+- (void)logException:(CDVInvokedUrlCommand*)command
+{
+    [self recordNonFatalError: command];
 }
 
 @end
