@@ -65,6 +65,11 @@ var FabricCrashlytics = (function () {
             window.fabric.core.execPlugin('sendNonFatalCrash', params);
         }
     }, {
+        key: 'logException',
+        value: function logException(message, stackTrace) {
+            window.fabric.core.execPlugin('logException', [message, stackTrace]);
+        }
+    }, {
         key: 'recordError',
         value: function recordError(message, code) {
             window.fabric.core.execPlugin('recordError', [message, code]);
