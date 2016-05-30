@@ -50,6 +50,8 @@ public class FabricPlugin extends CordovaPlugin {
 			sendCrash(data, callbackContext);
 		} else if (action.equals("sendNonFatalCrash")) {
 			sendNonFatalCrash(data, callbackContext);
+		}  else if (action.equals("logException")) {
+			logException(data, callbackContext);
 		} else if (action.equals("setUserIdentifier")) {
 			setUserIdentifier(data, callbackContext);
 		} else if (action.equals("setUserName")) {
@@ -127,6 +129,22 @@ public class FabricPlugin extends CordovaPlugin {
 			@Override
 			public void run() {
 				Crashlytics.logException(new Throwable(data.optString(0, "No Message Provided")));
+			}
+		});
+	}
+
+	private void logException(final JSONArray data,
+								   final CallbackContext callbackContext) {
+
+		this.cordova.getActivity().runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				Crashlytics.logException(
+					new Throwable(
+						data.optString(0, "No Message Provided"),
+						new Throwable(data.optString(1, "No stack trace provided."))
+					)
+				);
 			}
 		});
 	}
