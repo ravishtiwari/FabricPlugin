@@ -42,6 +42,12 @@ class FabricCrashlytics {
         ]);
     }
 
+    logException(message, stackTrace) {
+        window.fabric.core.execPlugin('logException', [
+            message, stackTrace
+        ]);
+    }
+
     recordError(message, code) {
         window.fabric.core.execPlugin('recordError', [
             message,
