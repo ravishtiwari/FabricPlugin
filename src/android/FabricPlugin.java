@@ -171,22 +171,6 @@ public class FabricPlugin extends CordovaPlugin {
 		});
 	}
 
-	private void logException(final JSONArray data,
-								   final CallbackContext callbackContext) {
-
-		this.cordova.getActivity().runOnUiThread(new Runnable() {
-			@Override
-			public void run() {
-				Crashlytics.logException(
-					new Throwable(
-						data.optString(0, "No Message Provided"),
-						new Throwable(data.optString(1, "No stack trace provided."))
-					)
-				);
-			}
-		});
-	}
-
 	private void setUserIdentifier(final JSONArray data,
 								   final CallbackContext callbackContext) {
 
